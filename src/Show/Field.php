@@ -364,6 +364,10 @@ HTML;
             }
 
             return collect((array) $value)->map(function ($name) use ($style) {
+                if (is_array($style)) {
+                    $style = Arr::get($style, $name, 'success');
+                }
+
                 return "<span class='label label-{$style}'>$name</span>";
             })->implode('&nbsp;');
         });
