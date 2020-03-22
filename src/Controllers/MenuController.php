@@ -39,7 +39,7 @@ class MenuController extends Controller
 
                     $form->select('parent_id', trans('admin.parent_id'))->options($menuModel::selectOptions());
                     $form->text('title', trans('admin.title'))->rules('required');
-                    $form->icon('icon', trans('admin.icon'))->default('fas fa-bars')->rules('required')->help($this->iconHelp());
+                    $form->icon('icon', trans('admin.icon'))->default('fa-bars')->rules('required')->help($this->iconHelp());
                     $form->text('uri', trans('admin.uri'));
                     $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
                     if ((new $menuModel())->withPermission()) {
@@ -71,25 +71,27 @@ class MenuController extends Controller
     {
         $menuModel = config('admin.database.menu_model');
 
-        return $menuModel::tree(function (Tree $tree) {
-            $tree->disableCreate();
+        $tree = new Tree(new $menuModel());
 
-            $tree->branch(function ($branch) {
-                $payload = "<i class='{$branch['icon']}'></i>&nbsp;<strong>{$branch['title']}</strong>";
+        $tree->disableCreate();
 
-                if (!isset($branch['children'])) {
-                    if (url()->isValidUrl($branch['uri'])) {
-                        $uri = $branch['uri'];
-                    } else {
-                        $uri = admin_url($branch['uri']);
-                    }
+        $tree->branch(function ($branch) {
+            $payload = "<i class='fa {$branch['icon']}'></i>&nbsp;<strong>{$branch['title']}</strong>";
 
-                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"$uri\" class=\"dd-nodrag\">$uri</a>";
+            if (!isset($branch['children'])) {
+                if (url()->isValidUrl($branch['uri'])) {
+                    $uri = $branch['uri'];
+                } else {
+                    $uri = admin_url($branch['uri']);
                 }
 
-                return $payload;
-            });
+                $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"$uri\" class=\"dd-nodrag\">$uri</a>";
+            }
+
+            return $payload;
         });
+
+        return $tree;
     }
 
     /**
@@ -125,7 +127,7 @@ class MenuController extends Controller
 
         $form->select('parent_id', trans('admin.parent_id'))->options($menuModel::selectOptions());
         $form->text('title', trans('admin.title'))->rules('required');
-        $form->icon('icon', trans('admin.icon'))->default('fas fa-bars')->rules('required')->help($this->iconHelp());
+        $form->icon('icon', trans('admin.icon'))->default('fa-bars')->rules('required')->help($this->iconHelp());
         $form->text('uri', trans('admin.uri'));
         $form->multipleSelect('roles', trans('admin.roles'))->options($roleModel::all()->pluck('name', 'id'));
         if ($form->model()->withPermission()) {
