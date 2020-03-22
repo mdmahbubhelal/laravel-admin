@@ -471,6 +471,18 @@ class Filter implements Renderable
     }
 
     /**
+     * Remove all scopes
+     *
+     * @return $this
+     */
+    public function removeScopes()
+    {
+        $this->$scopes = new Collection();
+
+        return $this;
+    }
+
+    /**
      * Add a new layout column.
      *
      * @param int      $width
