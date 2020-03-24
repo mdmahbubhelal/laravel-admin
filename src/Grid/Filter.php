@@ -477,7 +477,7 @@ class Filter implements Renderable
      */
     public function removeScopes()
     {
-        $this->$scopes = new Collection();
+        $this->scopes = new Collection();
 
         return $this;
     }

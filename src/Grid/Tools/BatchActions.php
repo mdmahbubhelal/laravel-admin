@@ -95,6 +95,13 @@ class BatchActions extends AbstractTool
         return $this;
     }
 
+    public function removeActions()
+    {
+        $this->actions = new Collection();
+        
+        $this->appendDefaultAction();
+    }
+
     /**
      * Setup scripts of batch actions.
      *
